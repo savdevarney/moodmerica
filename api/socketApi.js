@@ -1,15 +1,14 @@
 var socket_io = require('socket.io');
 var io = socket_io();
 var socketApi = {};
+const tweets = require('./routes/tweets');
 
 socketApi.io = io;
 
-io.on('connection', function(socket){
-    console.log('A user connected');
-});
-
-socketApi.sendNotification = function() {
-    io.sockets.emit('hello', {msg: 'Hello World!'});
-}
+io.of('/tweets').on('connection', function(socket) {
+    socket.emit('tweets', {tweets: 'eventually a bunch of tweets!'});
+    tweets.socketConnection = socket;
+    tweets.startTwitterStream();
+})
 
 module.exports = socketApi;
